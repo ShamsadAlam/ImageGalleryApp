@@ -1,7 +1,13 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const FLICKR_API_KEY = "6f102c62f41998d151e5a1b48713cf13";
 
 export const getRecentImages = async () => {
   try {
+    const cachedImages = await AsyncStorage.getItem("cachedImages");
+    if (cachedImages) {
+      const images = JSON.parse(cachedImages);
+      return images;
+    }
     const response = await fetch(
       `https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&per_page=20&page=1&api_key=${FLICKR_API_KEY}&format=json&nojsoncallback=1&extras=url_s`
     );
@@ -9,7 +15,6 @@ export const getRecentImages = async () => {
     const data = await response.json();
 
     if (data.stat === "ok") {
-      // Extract necessary information from the API response
       const images = data.photos.photo.map((photo) => ({
         id: photo.id,
         url: photo.url_s,
