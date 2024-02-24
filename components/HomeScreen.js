@@ -8,7 +8,6 @@ const HomeScreen = () => {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    // Fetch recent images from Flickr API
     getRecentImages()
       .then((data) => setImages(data))
       .catch((error) => console.error(error));
